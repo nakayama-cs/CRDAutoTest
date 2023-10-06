@@ -111,9 +111,9 @@ get_result=$(go run ./cmd/mtechnavi-cli/ grpcurl ${serviceName}/Get${endpoint} @
 # GETで取得したID
 got_id=$(echo "$get_result" | sed -n "s/.*\"${id_name_on_json}\":\s*\"\(.*\)\".*/\1/p")
 # 更新時間
-update_at=$(echo "$get_result" | sed -n "s/.*\"updatedAt\":\s*\"\(.*\)\".*/\1/p")
+update_at=$(echo "$get_result" | sed -nE 's/.*"updatedAt": "([^"]*)".*/\1/p' | tail -n 1)
 # 削除時間
-delete_at=$(echo "$get_result" | sed -n "s/.*\"deletedAt\":\s*\"\(.*\)\".*/\1/p")
+delete_at=$(echo "$get_result" | sed -nE 's/.*"deletedAt": "([^"]*)".*/\1/p' | tail -n 1)
 
 echo "取得したID:"$got_id
 
