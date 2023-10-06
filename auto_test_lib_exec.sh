@@ -31,3 +31,11 @@ function autoTestExecGrpcurlUpdate() {
     host_info=$4
     echo $(go run ./cmd/mtechnavi-cli/ grpcurl ${service}/Update${endpoint} @${json_file} -u ${host_info} -s)
 }
+
+function autoTestExecGrpcurlCreate() {
+    service=$1
+    endpoint=$2
+    json_file=$3
+    host_info=$4
+    echo $(go run ./cmd/mtechnavi-cli/ grpcurl ${service}/Create${endpoint} @${json_file} -u ${host_info} -s)
+}
