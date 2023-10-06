@@ -21,8 +21,20 @@ function autoTestAssertIfEmptyString() {
     fi
 }
 
+function autoTestAssertIfNotEmptyString() {
+    if [ ! -z "$1" ]; then
+        autoTestAssertAlways $2
+    fi
+}
+
+function autoTestAssertIfEquals() {
+    if [ "$1" = "$2" ]; then
+        autoTestAssertAlways $3
+    fi
+}
+
 function autoTestAssertIfNotEquals() {
-    if [ "$1" -ne "$2"]; then
+    if [ "$1" != "$2" ]; then
         autoTestAssertAlways $3
     fi
 }
