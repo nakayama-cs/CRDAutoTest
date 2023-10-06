@@ -22,7 +22,7 @@ function autoTestAssertIfEmptyString() {
 }
 
 function autoTestAssertIfNotEquals() {
-        if [ "$1" -ne "$2"]; then
+    if [ "$1" -ne "$2"]; then
         autoTestAssertAlways $3
     fi
 }
