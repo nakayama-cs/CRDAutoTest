@@ -2,11 +2,15 @@
 
 function autoTestAssertIfNotSupported() {
     if ! command -v go &>/dev/null; then
-        autoTestAssertAlways "go hasn't installed"
+        autoTestAssertAlways "go is not installed"
     fi
 
     if ! command -v sed &>/dev/null; then
-        autoTestAssertAlways "sed hasn't installed"
+        autoTestAssertAlways "sed is not installed"
+    fi
+
+    if ! command -v jq &>/dev/null; then
+        autoTestAssertAlways "jq is not installed"
     fi
 }
 
