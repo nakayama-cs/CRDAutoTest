@@ -52,17 +52,17 @@ autoTestAssertIfEmptyString "$list_json" "LISTに失敗しました"
 
 # カウント値が予期した数値になっていることを確認する
 expect_after_total=$(expr $total_before + 4)
-has=$(autoTestHasKeyValue "$list_json" "total" "$expect_after_total")
+has=$(autoTestExistsValue "$list_json" ".total" "$expect_after_total")
 total_after=$(autoTestGet "$list_json" ".total")
 autoTestAssertIfEmptyString "$has" "totalに予期しない値が格納されています:${total_after}"
 
 echo "リストのtotal(CRATE後):"$total_after
 
 # リスト内に新規作成したIDが存在するかを確認する
-has1=$(autoTestHasKeyValue "$list_json" "businessUnitContactId" "$json1_id")
-has2=$(autoTestHasKeyValue "$list_json" "businessUnitContactId" "$json2_id")
-has3=$(autoTestHasKeyValue "$list_json" "businessUnitContactId" "$json3_id")
-has4=$(autoTestHasKeyValue "$list_json" "businessUnitContactId" "$json4_id")
+has1=$(autoTestExistsValue "$list_json" ".items[].businessUnitContactId" "$json1_id")
+has2=$(autoTestExistsValue "$list_json" ".items[].businessUnitContactId" "$json2_id")
+has3=$(autoTestExistsValue "$list_json" ".items[].businessUnitContactId" "$json3_id")
+has4=$(autoTestExistsValue "$list_json" ".items[].businessUnitContactId" "$json4_id")
 autoTestAssertIfEmptyString "$has1" "create1.jsonで作成した新規IDがリストに存在しませんでした"
 autoTestAssertIfEmptyString "$has2" "create2.jsonで作成した新規IDがリストに存在しませんでした"
 autoTestAssertIfEmptyString "$has3" "create3.jsonで作成した新規IDがリストに存在しませんでした"
@@ -106,11 +106,14 @@ autoTestAssertIfNotEquals "$get2_deletedAt" "0" "get2.jsonで取得したレコ�
 autoTestAssertIfNotEquals "$get3_deletedAt" "0" "get3.jsonで取得したレコードの削除時間が0以外になっています"
 autoTestAssertIfNotEquals "$get4_deletedAt" "0" "get4.jsonで取得したレコードの削除時間が0以外になっています"
 
-
 # company_idsでLISTを取得する
+
+## company_id=1で検索する
+## company_id=2で検索する
 
 # business_unit_management_idsで
 
+## TODO
 
 # 作成したレコードを削除する
 echo "{\"business_unit_contact\": {\"business_unit_contact_id\": \"${json1_id}\", \"updated_at\": \"${get1_updatedAt}\" }}" > delete1.json
@@ -152,10 +155,10 @@ total_after_delete=$(autoTestGet "$list_json" ".total")
 echo "リストのtotal(DELETE後):"$total_after_delete
 
 # 新規作成したIDがリストに存在しているか確認する
-has1=$(autoTestHasKeyValue "$list_json" "businessUnitContactId" "$json1_id")
-has2=$(autoTestHasKeyValue "$list_json" "businessUnitContactId" "$json2_id")
-has3=$(autoTestHasKeyValue "$list_json" "businessUnitContactId" "$json3_id")
-has4=$(autoTestHasKeyValue "$list_json" "businessUnitContactId" "$json4_id")
+has1=$(autoTestExistsValue "$list_json" ".items[].businessUnitContactId" "$json1_id")
+has2=$(autoTestExistsValue "$list_json" ".items[].businessUnitContactId" "$json2_id")
+has3=$(autoTestExistsValue "$list_json" ".items[].businessUnitContactId" "$json3_id")
+has4=$(autoTestExistsValue "$list_json" ".items[].businessUnitContactId" "$json4_id")
 
 autoTestAssertIfNotEmptyString "$has1" "[削除後]create1.jsonで作成したレコードがリストにまだ存在しています"
 autoTestAssertIfNotEmptyString "$has2" "[削除後]create2.jsonで作成したレコードがリストにまだ存在しています"
