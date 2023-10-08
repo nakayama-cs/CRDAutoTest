@@ -4,10 +4,6 @@ function autoTestGet() {
     echo $(echo $1 | jq -r $2)
 }
 
-function autoTestHasKeyValue() {
-    echo $(echo $1 | sed -nE "s/.*\"${2}\":\s*\"(${3})\".*/\1/p" | tail -n 1)
-}
-
 #
 # jsonを指定filterで抽出したデータに検査文字列が1つ以上含まれているかを検査します
 # 
