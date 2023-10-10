@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# デフォルトのパスを設定
-if [ -z $EXEC_PATH ]; then
-    export EXEC_PATH="./cmd/mtechnavi-cli/"
-fi
-
 function extractJson() {
     echo $1 | sed -z "s/\n//g" | sed -n "s/.*Response contents:\s*\({.*}\).*/\1/p"
 }
