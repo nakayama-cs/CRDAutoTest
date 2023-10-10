@@ -19,7 +19,7 @@ echo '{"business_unit_contact": {"company_id": "1", "business_unit_management_id
 echo '{"business_unit_contact": {"company_id": "2", "business_unit_management_id": "1"}}' > auto_test_create3.json
 echo '{"business_unit_contact": {"company_id": "2", "business_unit_management_id": "2"}}' > auto_test_create4.json
 
-# 作成前にリストを取得
+# 現在のリストを取得
 list_json=$(autoTestExecGrpcurlList "$service" "$endpoint" auto_test_empty.json "$host_info")
 autoTestAssertIfEmptyString "$list_json" "LISTに失敗しました"
 total_before=$(autoTestGet "$list_json" ".total")
