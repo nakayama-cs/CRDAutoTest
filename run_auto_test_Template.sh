@@ -6,17 +6,20 @@ source ./auto_test_lib.sh
 # 自動テスト実行のための環境が構築されていない場合はこの行でアサートする
 autoTestAssertIfNotSupported
 
+# 実行ファイルのパス設定
+autoTestConfigExecPath "../cmd/mtechnavi-cli/"
+
 # パラメータ
 service="mtechnavi.api.company.BusinessUnitManagementService"
-endpoint="BusinessUnitContact"
-json_object_name="business_unit_contact"
-json_object_id_name="business_unit_contact_id"
+endpoint="BusinessUnitContactAttribute"
+json_object_name="business_unit_contact_attribute"
+json_object_id_name="business_unit_contact_attribute_id"
 json_object_management_id_name="business_unit_management_id"
+result_json_id_name="businessUnitContactAttributeId"
 host_info="http://localhost:8000"
 
-# 各バリエーションごとにjsonファイルを作成
 echo '{}' > auto_test_empty.json
-echo "{\"${json_object_name}\": {\"company_id\": \"1\", \"${json_object_management_id_name}\": \"1\"}}" > auto_test_create.json
+echo "{\"${json_object_name}\": {\"business_unit_management_id\": \"1\"}}" > auto_test_create.json
 
 # 現在のリストを取得
 list_json=$(autoTestExecGrpcurlList "$service" "$endpoint" auto_test_empty.json "$host_info")
@@ -26,7 +29,7 @@ total_before=$(autoTestGet "$list_json" ".total")
 # auto_test_create.jsonで新規レコードを作成
 create_json=$(autoTestExecGrpcurlCreate "$service" "$endpoint" auto_test_create.json "$host_info")
 autoTestAssertIfEmptyString "$create_json" "CREATE(auto_test_create.json)に失敗しました"
-json_id=$(autoTestGet "$create_json" ".businessUnitContactId")
+json_id=$(autoTestGet "$create_json" ".${result_json_id_name}")
 
 # 作成後にリストを取得
 list_json=$(autoTestExecGrpcurlList "$service" "$endpoint" auto_test_empty.json "$host_info")
@@ -39,7 +42,7 @@ total_after=$(autoTestGet "$list_json" ".total")
 autoTestAssertIfEmptyString "$has" "totalに予期しない値が格納されています:${total_after}"
 
 # リスト内に新規作成したIDが存在するかを確認する
-has=$(autoTestExistsValue "$list_json" ".items[].businessUnitContactId" "$json_id")
+has=$(autoTestExistsValue "$list_json" ".items[].${result_json_id_name}" "$json_id")
 autoTestAssertIfEmptyString "$has" "auto_test_create.jsonで作成した新規IDがリストに存在しませんでした"
 
 # GET用jsonを作成する
@@ -75,4 +78,4 @@ autoTestAssertIfNotEmptyString "$has1" "[削除後]auto_test_create.jsonで作�
 # テストで使用したjsonを削除する
 rm auto_test_*.json
 
-echo "PASSED BusinessUnitContact"
+echo "PASSED $endpoint"
