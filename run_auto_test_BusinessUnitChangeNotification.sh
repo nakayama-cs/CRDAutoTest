@@ -30,9 +30,15 @@ create_json=$(autoTestExecGrpcurlCreate "$service" "$endpoint" auto_test_create.
 autoTestAssertIfEmptyString "$create_json" "CREATE(auto_test_create.json)に失敗しました"
 json_id=$(autoTestGet "$create_json" ".${result_json_id_name}")
 
+# ログ出力
+echo $create_json > log_create.log
+
 # 作成後にリストを取得
 list_json=$(autoTestExecGrpcurlList "$service" "$endpoint" auto_test_empty.json "$host_info")
 autoTestAssertIfEmptyString "$list_json" "LISTに失敗しました"
+
+# ログ出力
+echo $list_json > log_list_before_delete.log
 
 # カウント値が予期した数値になっていることを確認する
 expect_after_total=$(expr $total_before + 1)
@@ -65,10 +71,15 @@ autoTestAssertIfEmptyString "$get_json" "auto_test_get.jsonでのGETに失敗し
 get_deletedAt=$(autoTestGet "$get_json" ".deletedAt")
 autoTestAssertIfEquals "$get_deletedAt" "0" "[削除後]auto_test_get.jsonで取得したレコードの削除時間が0になっています"
 
+echo "$get_json" > log_get_after_delete.json
+
 # 削除後に再度LISTを実行して作成したIDの存在の有無とtotalを確認する
 list_json=$(autoTestExecGrpcurlList "$service" "$endpoint" auto_test_empty.json "$host_info")
 autoTestAssertIfEmptyString "$list_json" "LISTに失敗しました"
 total_after_delete=$(autoTestGet "$list_json" ".total")
+
+# ログ出力
+echo $list_json > log_list_after_delete.json
 
 # 新規作成したIDがリストに存在しているか確認する
 has1=$(autoTestExistsValue "$list_json" ".items[].businessUnitContactId" "$json_id")
