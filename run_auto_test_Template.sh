@@ -9,7 +9,6 @@ autoTestAssertIfNotSupported
 # パラメータ
 service="mtechnavi.api.company.BusinessUnitManagementService"
 endpoint="BusinessUnitContact"
-json_file="auto_test_empty.json"
 host_info="http://localhost:8000"
 
 # 各バリエーションごとにjsonファイルを作成
