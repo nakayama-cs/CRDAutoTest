@@ -11,14 +11,14 @@ autoTestConfigExecPath "../cmd/mtechnavi-cli/"
 
 # パラメータ
 service="mtechnavi.api.company.BusinessUnitManagementService"
-endpoint="BusinessUnitContactAttribute"
-json_object_name="business_unit_contact_attribute"
-json_object_id_name="business_unit_contact_attribute_id"
-result_json_id_name="businessUnitContactAttributeId"
+endpoint="TokyoShokoResearch"
+json_object_name="tokyo_shoko_research"
+json_object_id_name="tokyo_shoko_research_id"
+result_json_id_name="tokyoShokoResearchId"
 host_info="http://localhost:8000"
 
 echo '{}' > auto_test_empty.json
-echo "{\"${json_object_name}\": {\"business_unit_management_id\": \"1\"}}" > auto_test_create.json
+echo "{\"${json_object_name}\": {}}" > auto_test_create.json
 
 # 現在のリストを取得
 list_json=$(autoTestExecGrpcurlList "$service" "$endpoint" auto_test_empty.json "$host_info")
