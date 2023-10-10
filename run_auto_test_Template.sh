@@ -14,7 +14,6 @@ service="mtechnavi.api.company.BusinessUnitManagementService"
 endpoint="BusinessUnitContactAttribute"
 json_object_name="business_unit_contact_attribute"
 json_object_id_name="business_unit_contact_attribute_id"
-json_object_management_id_name="business_unit_management_id"
 result_json_id_name="businessUnitContactAttributeId"
 host_info="http://localhost:8000"
 
