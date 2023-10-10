@@ -9,11 +9,14 @@ autoTestAssertIfNotSupported
 # パラメータ
 service="mtechnavi.api.company.BusinessUnitManagementService"
 endpoint="BusinessUnitContact"
+json_object_name="business_unit_contact"
+json_object_id_name="business_unit_contact_id"
+json_object_management_id_name="business_unit_management_id"
 host_info="http://localhost:8000"
 
 # 各バリエーションごとにjsonファイルを作成
 echo '{}' > auto_test_empty.json
-echo '{"business_unit_contact": {"company_id": "1", "business_unit_management_id": "1"}}' > auto_test_create.json
+echo "{\"${json_object_name}\": {\"company_id\": \"1\", \"${json_object_management_id_name}\": \"1\"}}" > auto_test_create.json
 
 # 現在のリストを取得
 list_json=$(autoTestExecGrpcurlList "$service" "$endpoint" auto_test_empty.json "$host_info")
@@ -40,7 +43,7 @@ has=$(autoTestExistsValue "$list_json" ".items[].businessUnitContactId" "$json_i
 autoTestAssertIfEmptyString "$has" "auto_test_create.jsonで作成した新規IDがリストに存在しませんでした"
 
 # GET用jsonを作成する
-echo "{\"business_unit_contact_id\": \"${json_id}\" }" > auto_test_get.json
+echo "{\"${json_object_id_name}\": \"${json_id}\" }" > auto_test_get.json
 
 # GETを実行してupdatedAtとdeletedAtのタイムスタンプを確認する
 get_json=$(autoTestExecGrpcurlGet "$service" "$endpoint" auto_test_get.json "$host_info")
@@ -51,7 +54,7 @@ get_deletedAt=$(autoTestGet "$get_json" ".deletedAt")
 autoTestAssertIfNotEquals "$get_deletedAt" "0" "auto_test_get.jsonで取得したレコードの削除時間が0以外になっています"
 
 # 作成したレコードを削除する
-echo "{\"business_unit_contact\": {\"business_unit_contact_id\": \"${json_id}\", \"updated_at\": \"${get_updatedAt}\" }}" > auto_test_delete.json
+echo "{\"${json_object_name}\": {\"${json_object_id_name}\": \"${json_id}\", \"updated_at\": \"${get_updatedAt}\" }}" > auto_test_delete.json
 autoTestExecGrpcurlDelete "$service" "$endpoint" auto_test_delete.json "$host_info" > /dev/null 2>&1
 
 # 削除後に再度GETを実行してdeletedAtのタイムスタンプを確認する
