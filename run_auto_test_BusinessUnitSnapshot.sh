@@ -55,6 +55,23 @@ autoTestAssertIfEquals "$get_updatedAt" "0" "auto_test_get.jsonで取得した�
 get_deletedAt=$(autoTestGet "$get_json" ".deletedAt")
 autoTestAssertIfNotEquals "$get_deletedAt" "0" "auto_test_get.jsonで取得したレコードの削除時間が0以外になっています"
 
+# UPDATEを実行してupdatedAtのタイムスタンプが更新されていること確認する
+echo "{\"${json_object_name}\": {\"${json_object_id_name}\": \"${json_id}\", \"updated_at\": \"${get_updatedAt}\"} }" > auto_test_update.json
+update_json=$(autoTestExecGrpcurlUpdate "$service" "$endpoint" auto_test_update.json "$host_info")
+update_updatedAt=$(autoTestGet "$update_json" ".updatedAt")
+autoTestAssertIfEquals "$update_updatedAt" "0" "auto_test_update.jsonで更新したレコードの更新時間が0になっています"
+autoTestAssertIfEquals "$update_updatedAt" "$get_updatedAt" "auto_test_update.jsonで更新したレコードの更新時間が変更されていません"
+update_deletedAt=$(autoTestGet "$update_json" ".deletedAt")
+autoTestAssertIfNotEquals "$update_deletedAt" "0" "auto_test_update.jsonで更新したレコードの削除時間が0以外になっています"
+
+# GETを実行してupdatedAtとdeletedAtのタイムスタンプを確認する
+get_json=$(autoTestExecGrpcurlGet "$service" "$endpoint" auto_test_get.json "$host_info")
+autoTestAssertIfEmptyString "$get_json" "auto_test_get.jsonでのGETに失敗しました"
+get_updatedAt=$(autoTestGet "$get_json" ".updatedAt")
+autoTestAssertIfEquals "$get_updatedAt" "0" "auto_test_get.jsonで取得したレコードの更新時間が0になっています"
+get_deletedAt=$(autoTestGet "$get_json" ".deletedAt")
+autoTestAssertIfNotEquals "$get_deletedAt" "0" "auto_test_get.jsonで取得したレコードの削除時間が0以外になっています"
+
 # 作成したレコードを削除する
 echo "{\"${json_object_name}\": {\"${json_object_id_name}\": \"${json_id}\", \"updated_at\": \"${get_updatedAt}\" }}" > auto_test_delete.json
 autoTestExecGrpcurlDelete "$service" "$endpoint" auto_test_delete.json "$host_info" > /dev/null 2>&1
@@ -75,6 +92,6 @@ has1=$(autoTestExistsValue "$list_json" ".items[].businessUnitContactId" "$json_
 autoTestAssertIfNotEmptyString "$has1" "[削除後]auto_test_create.jsonで作成したレコードがリストにまだ存在しています"
 
 # テストで使用したjsonを削除する
-rm auto_test_*.json
+# rm auto_test_*.json
 
 echo "PASSED $endpoint"
